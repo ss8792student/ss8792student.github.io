@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sahasra Sarapu</title>
+<meta name="description" content="Sahasra Sarapu is a high school researcher in Frisco, Texas, studying how LLM judges handle language, including Telugu-English code-switching.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wdth,wght@75..125,100..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap">
+<style>
+:root {
+  /* Layout: white paper, indigo ink, and a set of highlighters. Soft washes of
+     highlighter color drift behind the page as it scrolls. The home page is a
+     scroll story with a pinned picture that changes per chapter; every other
+     page is a quiet list. One light theme, on purpose. */
+  --paper: #FCFCFF;
+  --ink: #1D2145;
+  --ink-soft: #5A6082;
+  --pen: #3350E0;
+  --marker: #FFE36E;   /* yellow highlighter: Telugu, and the accent */
+  --blush: #FFD2E1;    /* pink highlighter */
+  --sky: #D3E5FF;      /* blue highlighter */
+  --mint: #CDF2E1;     /* green highlighter */
+  --line: #E3E6F3;
+  --glass: rgba(255, 255, 255, 0.74);
+
+  --display: "Anek Telugu", "Noto Sans Telugu", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Literata", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5625rem;
+  --step-3: 1.95rem;
+  --step-4: clamp(2.5rem, 1.6rem + 3.6vw, 4.4rem);
+  --step-name: clamp(3.2rem, 1.4rem + 6.2vw, 6.3rem);
+
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --sy: 0;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--paper); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+}
+img { max-width: 100%; height: auto; display: block; }
+p, h1, h2, h3, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+h1, h2, h3 { text-wrap: balance; }
+button { font: inherit; color: inherit; }
+
+/* Washes of highlighter color behind everything */
+.washes { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.washes i { position: absolute; border-radius: 50%; will-change: transform; }
+.washes .w1 {
+  width: 62rem; height: 62rem; right: -22rem; top: -26rem;
+  background: radial-gradient(closest-side, rgba(255, 227, 110, .55), rgba(255, 227, 110, 0));
+  transform: translate3d(0, calc(var(--sy) * -0.10px), 0);
+}
+.washes .w2 {
+  width: 54rem; height: 54rem; left: -24rem; top: 22rem;
+  background: radial-gradient(closest-side, rgba(255, 210, 225, .6), rgba(255, 210, 225, 0));
+  transform: translate3d(0, calc(var(--sy) * -0.22px), 0);
+}
+.washes .w3 {
+  width: 58rem; height: 58rem; right: -20rem; top: 62rem;
+  background: radial-gradient(closest-side, rgba(211, 229, 255, .8), rgba(211, 229, 255, 0));
+  transform: translate3d(0, calc(var(--sy) * -0.34px), 0);
+}
+.washes .w4 {
+  width: 46rem; height: 46rem; left: -12rem; top: 118rem;
+  background: radial-gradient(closest-side, rgba(205, 242, 225, .7), rgba(205, 242, 225, 0));
+  transform: translate3d(0, calc(var(--sy) * -0.42px), 0);
+}
+
+.site { position: relative; z-index: 1; overflow-x: clip; }
+.wrap { max-width: 72rem; margin-inline: auto; padding-inline: clamp(1.125rem, 4.5vw, 3.5rem); }
+
+/* Links */
+a { color: var(--pen); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a.swipe {
+  background: linear-gradient(var(--marker), var(--marker)) no-repeat left center / 0% 100%;
+  transition: background-size .22s ease-out;
+  border-radius: .15em;
+  padding: .05em .15em;
+  margin: -.05em -.15em;
+}
+a.swipe:hover { background-size: 100% 100%; color: var(--ink); }
+:focus-visible { outline: 2px solid var(--pen); outline-offset: 3px; border-radius: 3px; }
+
+/* Top bar */
+.bar { position: sticky; top: 0; z-index: 20; padding-block: .75rem; }
+.bar-in {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: .3rem 1.5rem;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 10px 30px -18px rgba(40, 50, 120, .35);
+  border-radius: 1.1rem;
+  padding: .55rem .7rem .45rem 1.1rem;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--display);
+}
+.brand { font-weight: 650; font-size: 1.08rem; color: var(--ink); text-decoration: none; letter-spacing: -.005em; }
+.bar nav { display: flex; flex-wrap: wrap; gap: .1rem .15rem; font-weight: 500; font-size: 1rem; }
+.bar nav a {
+  color: var(--ink); text-decoration: none;
+  padding: .32rem .7rem .2rem; border-radius: .6rem;
+  transition: background-color .18s;
+}
+.bar nav a:hover { background: rgba(255, 227, 110, .45); }
+.bar nav a[aria-current="page"] { background: var(--marker); }
+.progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--pen); transform-origin: left; transform: scaleX(var(--read, 0)); }
+
+/* Shared pieces */
+.card {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .95);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 24px 50px -28px rgba(40, 50, 120, .32);
+  border-radius: 1.4rem;
+}
+.button {
+  display: inline-block; font-family: var(--display); font-weight: 600;
+  background: var(--ink); color: #fff; text-decoration: none;
+  padding: .68rem 1.25rem .54rem; border-radius: .8rem; line-height: 1.2;
+  border: 0; cursor: pointer;
+  transition: transform .18s var(--ease), background-color .18s, color .18s;
+}
+.button:hover { background: var(--marker); color: var(--ink); transform: translateY(-2px); }
+.button.quiet { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.button.quiet:hover { background: var(--marker); box-shadow: none; }
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; font-family: var(--display); font-size: .95rem; }
+.chips li { background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: .22rem .8rem .08rem; }
+.chips li:nth-child(4n+1) { background: var(--sky); border-color: transparent; }
+.chips li:nth-child(4n+2) { background: var(--marker); border-color: transparent; }
+.chips li:nth-child(4n+3) { background: var(--mint); border-color: transparent; }
+.chips li:nth-child(4n+4) { background: var(--blush); border-color: transparent; }
+mark.hl {
+  color: inherit;
+  background: linear-gradient(var(--c, var(--marker)), var(--c, var(--marker))) no-repeat left 88% / 100% 46%;
+  padding-inline: .08em;
+}
+
+/* Views (pages) */
+.view { padding-bottom: clamp(3rem, 8vw, 6rem); }
+.js .view:not(.active) { display: none; }
+.js .view.active { animation: view-in .5s var(--ease); }
+@keyframes view-in { from { opacity: 0; transform: translateY(16px); } }
+
+/* Scroll reveals: only once the script is running */
+.js [data-reveal] {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.js [data-reveal].in { opacity: 1; transform: none; }
+.js mark.hl { background-size: 0% 46%; transition: background-size .8s var(--ease) .25s; }
+.js mark.hl.in { background-size: 100% 46%; }
+
+/* ---------- Home: hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding-block: clamp(1.5rem, 3.5vw, 2.5rem) clamp(2.5rem, 6vw, 5rem);
+}
+.hero h1 {
+  font-family: var(--display);
+  font-size: var(--step-name);
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: .92;
+  letter-spacing: -.02em;
+  padding-top: .12em;
+}
+.hero h1 span { display: block; animation: name-in .9s var(--ease) backwards; }
+.hero h1 span + span { animation-delay: .12s; }
+@keyframes name-in { from { opacity: 0; transform: translateY(.35em); } }
+.byline { display: flex; align-items: center; gap: .8rem; margin-top: 1.2rem; font-family: var(--display); line-height: 1.3; }
+.byline img { width: 3.4rem; height: 3.4rem; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 8px 18px -8px rgba(40, 50, 120, .5); }
+.byline b { font-weight: 600; display: block; }
+.byline span { color: var(--ink-soft); }
+.hero .lead { margin-top: 1.25rem; font-size: clamp(1.4rem, 1.1rem + 1vw, 1.8rem); line-height: 1.3; font-weight: 450; max-width: 25ch; }
+.hero .intro { margin-top: 1.1rem; color: var(--ink-soft); max-width: 46ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; margin-top: 1.8rem; }
+.actions a.swipe { font-family: var(--display); font-weight: 600; }
+
+/* The glossed example */
+.gloss { padding: clamp(1.3rem, 3vw, 2.1rem); font-family: var(--display); transform: translate3d(0, calc(var(--sy) * -0.05px), 0) rotate(calc(var(--sy) * 0.004deg)); }
+.gloss-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .9rem; row-gap: 1.05rem; align-items: baseline; }
+.gloss .no, .gloss .letter { color: var(--ink-soft); }
+.gloss .letter { justify-self: end; }
+.gloss-q { color: var(--ink-soft); font-size: 1.05rem; line-height: 1.4; }
+.gloss-a { font-size: 1.32rem; font-weight: 500; line-height: 1.35; }
+.igt { display: flex; flex-wrap: wrap; gap: .85rem .6rem; }
+.w { display: inline-flex; flex-direction: column; gap: .3rem; }
+.tok { font-size: 1.32rem; font-weight: 500; line-height: 1.35; align-self: flex-start; padding: .08em .24em 0; }
+.w.en .tok { padding-inline: 0; box-shadow: inset 0 -2px 0 var(--pen); }
+.w.te .tok {
+  background: linear-gradient(var(--marker), var(--marker)) no-repeat left center / 100% 100%;
+  border-radius: .2em .5em .25em .45em;
+  animation: swipe .5s var(--ease) backwards;
+  animation-delay: calc(.7s + var(--i, 0) * .28s);
+}
+@keyframes swipe { from { background-size: 0% 100%; } }
+.gl { font-size: .86rem; color: var(--ink-soft); line-height: 1.2; }
+.gl .gram { font-variant-caps: all-small-caps; letter-spacing: .03em; }
+.free { margin-top: .9rem; font-family: var(--body); font-style: italic; font-size: 1rem; }
+.gloss-foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem 1.25rem;
+  margin-top: 1.4rem; padding-top: 1.05rem; border-top: 1px solid var(--line); font-size: .92rem;
+}
+.legend { display: flex; gap: 1.1rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: .45rem; }
+.legend i { display: inline-block; width: 1.1rem; height: .7rem; }
+.legend .k-te { background: var(--marker); border-radius: .15em .3em .15em .3em; }
+.legend .k-en { height: 2px; background: var(--pen); }
+.script { display: inline-flex; background: #fff; border: 1px solid var(--line); border-radius: .7rem; padding: 3px; gap: 2px; }
+.script button { background: transparent; border: 0; padding: .3rem .7rem .18rem; border-radius: .5rem; cursor: pointer; line-height: 1.2; }
+.script button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.gloss figcaption { margin-top: 1.05rem; font-family: var(--body); font-size: .98rem; line-height: 1.55; max-width: 48ch; }
+
+/* ---------- Home: story ---------- */
+.story-head { padding-top: clamp(1.5rem, 4vw, 3rem); max-width: 44rem; }
+.story-head h2 { font-family: var(--display); font-size: var(--step-4); font-weight: 700; font-stretch: 82%; line-height: 1; letter-spacing: -.015em; }
+.story-head p { margin-top: 1rem; font-size: var(--step-2); line-height: 1.35; }
+
+.story { margin-top: clamp(2rem, 5vw, 3.5rem); display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(2.75rem, 7vw, 4rem); }
+.chapter { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.chapter .text { max-width: 34rem; }
+.kicker { display: inline-flex; align-items: baseline; gap: .55rem; font-family: var(--display); font-weight: 600; font-size: 1.05rem; background: var(--c); border-radius: 99px; padding: .25rem .9rem .1rem; }
+.kicker b { font-weight: 700; }
+.chapter h3 { margin-top: 1rem; font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem); font-weight: 500; line-height: 1.15; letter-spacing: -.01em; }
+.chapter .text p { margin-top: 1rem; }
+.chapter .go { margin-top: 1.2rem; font-family: var(--display); font-weight: 600; }
+
+.visual { padding: clamp(1.25rem, 3vw, 2rem); max-width: 30rem; width: 100%; }
+.v-cap { margin-top: 1.1rem; font-size: .98rem; line-height: 1.5; }
+.v-cap b { font-family: var(--display); font-weight: 650; display: block; font-size: 1.1rem; }
+
+/* books */
+.shelf { display: flex; align-items: flex-end; gap: .38rem; height: 12rem; border-bottom: 4px solid var(--ink); padding-inline: .5rem; }
+.shelf i { display: block; flex: 0 1 var(--w, 1.6rem); min-width: 0; height: var(--h, 80%); background: var(--c, var(--sky)); border-radius: .28rem .28rem 0 0; position: relative; transform-origin: bottom center; }
+.shelf i::after { content: ""; position: absolute; left: 18%; right: 18%; top: 14%; height: 3px; background: rgba(29, 33, 69, .28); border-radius: 2px; box-shadow: 0 8px 0 rgba(29, 33, 69, .14); }
+.shelf i.lean { transform: rotate(-9deg); transform-origin: bottom right; margin-left: .7rem; }
+.shelf i.ink { --c: var(--ink); }
+.shelf i.ink::after { background: rgba(255, 255, 255, .5); box-shadow: 0 8px 0 rgba(255, 255, 255, .25); }
+
+/* letter */
+.paper { background: #fff; border: 1px solid var(--line); border-radius: .7rem; padding: 1.1rem 1.15rem 1.2rem; display: grid; gap: .5rem; }
+.paper .tag { font-family: var(--display); font-size: .82rem; color: var(--ink-soft); }
+.paper .ln { display: block; height: .5rem; border-radius: 99px; background: #E9EBF5; width: var(--w, 100%); }
+.paper .legal { font-size: .82rem; line-height: 1.5; color: var(--ink); }
+.paper .legal mark { background: var(--blush); color: inherit; padding: .05em .1em; border-radius: .15em; }
+.plain { margin-top: .9rem; background: var(--mint); border-radius: .7rem; padding: .85rem 1.1rem .8rem; }
+.plain span { font-family: var(--display); font-size: .88rem; color: var(--ink-soft); }
+.plain p { font-size: 1.12rem; line-height: 1.4; font-weight: 500; }
+
+/* judge */
+.jq { font-family: var(--display); color: var(--ink-soft); line-height: 1.4; }
+.jrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; margin-top: .8rem; background: #fff; border: 1px solid var(--line); border-radius: .8rem; padding: .8rem .9rem .7rem 1rem; font-family: var(--display); font-size: 1.12rem; font-weight: 500; line-height: 1.6; }
+.jrow mark { background: var(--marker); color: inherit; border-radius: .2em .45em .25em .4em; padding: .06em .2em 0; }
+.score { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--sky); font-weight: 700; font-size: 1.2rem; padding-top: .12em; animation: wonder 2.4s ease-in-out infinite; }
+.jrow + .jrow .score { animation-delay: 1.2s; }
+@keyframes wonder { 50% { transform: scale(1.12); background: var(--marker); } }
+
+/* Pinned stage: wide screens with the script running */
+@media (min-width: 900px) {
+  .js .story { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(2.5rem, 6vw, 5.5rem); row-gap: 0; }
+  .js .chapter { display: contents; }
+  .js .chapter .visual {
+    grid-column: 1; grid-row: 1 / span 3;
+    position: sticky; top: max(6.5rem, calc(50vh - 13rem)); align-self: start; justify-self: center;
+    opacity: 0; transform: translateY(26px) scale(.95) rotate(-1.5deg);
+    transition: opacity .55s var(--ease), transform .7s var(--ease);
+    pointer-events: none;
+  }
+  .js .chapter.on .visual { opacity: 1; transform: none; pointer-events: auto; }
+  .js .chapter .text {
+    grid-column: 2; grid-row: var(--r);
+    min-height: min(82vh, 42rem);
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    opacity: .28; transition: opacity .5s;
+  }
+  .js .chapter.on .text { opacity: 1; }
+  .js .chapter .shelf i { transform: translateY(40%) scaleY(.4); opacity: 0; transition: transform .6s var(--ease), opacity .4s; transition-delay: calc(var(--n, 0) * 45ms); }
+  .js .chapter.on .shelf i { transform: none; opacity: 1; }
+  .js .chapter.on .shelf i.lean { transform: rotate(-9deg); }
+  .js .chapter .plain { transform: translateY(14px); opacity: 0; transition: transform .6s var(--ease) .35s, opacity .5s .35s; }
+  .js .chapter.on .plain { transform: none; opacity: 1; }
+  .js .chapter .jrow { transform: translateX(-16px); opacity: 0; transition: transform .6s var(--ease), opacity .5s; }
+  .js .chapter .jrow + .jrow { transition-delay: .18s; }
+  .js .chapter.on .jrow { transform: none; opacity: 1; }
+}
+
+/* ---------- Home: lately + ask ---------- */
+.lately { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 40rem); gap: 1.5rem clamp(2rem, 6vw, 5rem); padding-top: clamp(3rem, 8vw, 6rem); }
+.lately h2, .rows-head { font-family: var(--display); font-size: var(--step-3); font-weight: 700; font-stretch: 85%; line-height: 1.1; }
+.timeline { position: relative; display: grid; gap: 1.35rem; padding-left: 2rem; }
+.timeline::before, .timeline::after { content: ""; position: absolute; left: .34rem; top: .55rem; width: 2px; border-radius: 2px; }
+.timeline::before { bottom: .55rem; background: var(--line); }
+.timeline::after { height: calc((100% - 1.1rem) * var(--p, 1)); background: var(--pen); }
+.timeline li { position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -2rem; top: .42rem; width: .82rem; height: .82rem; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px var(--line); transition: background-color .3s, box-shadow .3s, transform .3s var(--ease); }
+.timeline li.passed::before { background: var(--marker); box-shadow: inset 0 0 0 2px var(--pen); transform: scale(1.15); }
+.timeline time { font-family: var(--display); font-weight: 600; color: var(--ink-soft); font-size: .95rem; display: block; }
+
+.ask { margin-top: clamp(3rem, 8vw, 6rem); padding: clamp(1.6rem, 4.5vw, 3.25rem); display: grid; gap: 1.4rem; }
+.ask p.big { font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.4rem); line-height: 1.2; font-weight: 500; max-width: 26ch; text-wrap: balance; letter-spacing: -.01em; }
+.ask .fit { color: var(--ink-soft); max-width: 52ch; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; font-family: var(--display); }
+.mail .addr { font-size: clamp(1.15rem, 1rem + .8vw, 1.5rem); font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+
+/* ---------- Inner pages ---------- */
+.page-head { padding-block: clamp(2rem, 6vw, 4.5rem) clamp(1.75rem, 4vw, 3rem); max-width: 46rem; }
+.page-head h1 { font-family: var(--display); font-size: clamp(3rem, 1.8rem + 5.2vw, 6rem); font-weight: 700; font-stretch: 80%; line-height: .95; letter-spacing: -.02em; padding-top: .1em; }
+.page-head h1 span { background: linear-gradient(var(--c, var(--marker)), var(--c, var(--marker))) no-repeat left 55% / 100% 24%; padding-inline: .06em; margin-inline: -.06em; }
+.js .view.active .page-head h1 span { animation: under .9s var(--ease) .15s backwards; }
+@keyframes under { from { background-size: 0% 24%; } }
+.page-head p { margin-top: 1.2rem; font-size: var(--step-2); line-height: 1.35; }
+.page-head .chips { margin-top: 1.4rem; }
+
+.panels { display: grid; gap: clamp(1.25rem, 3vw, 2rem); }
+.panel { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 1.5rem clamp(1.75rem, 4vw, 3.5rem); padding: clamp(1.4rem, 3.6vw, 2.75rem); }
+.panel-head h2 { font-size: clamp(1.6rem, 1.25rem + 1.3vw, 2.2rem); font-weight: 500; line-height: 1.17; letter-spacing: -.01em; }
+.panel-head .meta { margin-top: .9rem; font-family: var(--display); color: var(--ink-soft); line-height: 1.4; }
+.status { display: inline-flex; align-items: center; gap: .45rem; margin-top: .9rem; font-family: var(--display); font-weight: 600; font-size: .9rem; background: #fff; border: 1px solid var(--line); border-radius: 99px; padding: .2rem .8rem .06rem .65rem; }
+.status::before { content: ""; width: .55rem; height: .55rem; border-radius: 50%; background: var(--marker); box-shadow: 0 0 0 2px var(--ink); margin-bottom: .14rem; }
+.panel-head .links { margin-top: 1.2rem; font-family: var(--display); font-weight: 600; display: grid; gap: .3rem; justify-items: start; }
+.panel-body { display: grid; gap: .9rem; align-content: start; }
+.facts { display: grid; gap: 1.15rem; }
+.facts dt, .panel-body h3 { font-family: var(--display); font-weight: 650; font-size: 1.02rem; color: var(--pen); }
+.steps { counter-reset: s; display: grid; gap: .6rem; margin-top: .1rem; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 1.9rem minmax(0, 1fr); gap: .7rem; align-items: baseline; }
+.steps li::before { content: counter(s); font-family: var(--display); font-weight: 700; font-size: .95rem; width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: 50%; background: var(--sky); padding-top: .12em; }
+.panel-body .chips { margin-top: .3rem; }
+.note { border-left: 3px solid var(--marker); padding-left: .9rem; color: var(--ink-soft); }
+
+.rows-block { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 44rem); gap: 1rem clamp(2rem, 6vw, 5rem); padding-block: clamp(1.25rem, 3vw, 2rem); }
+.rows li { display: grid; grid-template-columns: minmax(0, 14.5rem) minmax(0, 1fr); column-gap: 1.75rem; padding-block: .95rem; border-top: 1px solid var(--line); }
+.rows li:last-child { border-bottom: 1px solid var(--line); }
+.rows .what { font-family: var(--display); font-weight: 650; font-size: 1.08rem; line-height: 1.35; padding-top: .14rem; }
+.rows .detail { color: var(--ink-soft); }
+.rows .detail strong { color: var(--ink); font-weight: 600; }
+
+.about { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 40rem); gap: 2rem clamp(2rem, 6vw, 5rem); align-items: start; }
+.portrait .frame { position: relative; }
+.portrait .frame::before { content: ""; position: absolute; inset: 8% -7% -6% 9%; background: var(--marker); border-radius: 1.4rem; transform: translate3d(0, calc(var(--sy) * 0.05px), 0) rotate(3deg); }
+.portrait img { position: relative; border-radius: 1.2rem; width: 100%; box-shadow: 0 24px 50px -26px rgba(40, 50, 120, .45); }
+.portrait figcaption { position: relative; margin-top: 1.4rem; font-size: var(--step--1); font-style: italic; color: var(--ink-soft); }
+.prose { display: grid; gap: .95rem; }
+.prose .first { font-size: var(--step-2); line-height: 1.35; }
+.prose h2 { font-family: var(--display); font-weight: 650; font-size: 1.02rem; color: var(--pen); margin-top: .9rem; }
+
+footer { border-top: 1px solid var(--line); margin-top: 1rem; padding-block: 1.6rem 3rem; font-family: var(--display); color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: .4rem 1.6rem; justify-content: space-between; }
+footer a { color: var(--ink); }
+
+@media (max-width: 899px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .gloss { transform: none; }
+  .lately, .rows-block, .about { grid-template-columns: minmax(0, 1fr); }
+  .panel { grid-template-columns: minmax(0, 1fr); }
+  .portrait { max-width: 17rem; }
+}
+@media (max-width: 560px) {
+  .bar-in { padding: .6rem .55rem .5rem .85rem; }
+  .bar nav { flex-wrap: nowrap; overflow-x: auto; width: 100%; font-size: .93rem; margin-left: -.5rem; scrollbar-width: none; }
+  .bar nav::-webkit-scrollbar { display: none; }
+  .bar nav a { padding-inline: .5rem; white-space: nowrap; }
+  .rows li { grid-template-columns: minmax(0, 1fr); row-gap: .15rem; }
+  .gloss-a, .tok { font-size: 1.18rem; }
+  .shelf { height: 9.5rem; gap: .28rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .js mark.hl { background-size: 100% 46%; }
+  .washes i, .gloss, .portrait .frame::before { transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="washes" aria-hidden="true"><i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i></div>
+
+<div class="site">
+  <header class="bar">
+    <div class="wrap">
+      <div class="bar-in">
+        <a class="brand" href="#home">Sahasra Sarapu</a>
+        <nav aria-label="Pages">
+          <a href="#research">Research</a>
+          <a href="#projects">Projects</a>
+          <a href="#leadership">Leadership</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <i class="progress" aria-hidden="true"></i>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ================= HOME ================= -->
+    <section class="view active" id="home">
+      <div class="hero">
+        <div>
+          <h1><span>Sahasra</span> <span>Sarapu</span></h1>
+          <div class="byline">
+            <img src="sahasra-sm.jpg" width="200" height="200" alt="">
+            <p><b>Junior, Panther Creek High School</b><span>Frisco, Texas</span></p>
+          </div>
+          <p class="lead">I study how AI models judge language, and who loses out when the answer isn't in plain English.</p>
+          <p class="intro">I do research on LLM judges, I built an app that explains official letters, and I run a literacy nonprofit. I'm looking for a research mentor or a lab to join in summer 2027.</p>
+          <div class="actions">
+            <a class="button" href="#research">See my research</a>
+            <a class="button quiet" href="#contact">Email me</a>
+            <a class="swipe" data-github href="https://github.com/ss8792student">GitHub</a>
+          </div>
+        </div>
+
+        <figure class="gloss card">
+          <div class="gloss-grid">
+            <span class="no">(1)</span>
+            <p class="gloss-q">Why do we see lightning before we hear thunder?</p>
+
+            <span class="letter">a.</span>
+            <p class="gloss-a">Because light travels faster than sound.</p>
+
+            <span class="letter">b.</span>
+            <div>
+              <div class="igt" id="igt">
+                <span class="w te" style="--i:0"><span class="tok" lang="te" data-te="ఎందుకంటే" data-ro="endukante">ఎందుకంటే</span><span class="gl">because</span></span>
+                <span class="w en"><span class="tok">light</span><span class="gl">light</span></span>
+                <span class="w en"><span class="tok">sound</span><span class="gl">sound</span></span>
+                <span class="w te" style="--i:1"><span class="tok" lang="te" data-te="కంటే" data-ro="kante">కంటే</span><span class="gl">than</span></span>
+                <span class="w en"><span class="tok">fast</span><span class="gl">fast</span></span>
+                <span class="w te" style="--i:2"><span class="tok" lang="te" data-te="గా" data-ro="ga">గా</span><span class="gl"><span class="gram">adv</span></span></span>
+                <span class="w en"><span class="tok">travel</span><span class="gl">travel</span></span>
+                <span class="w te" style="--i:3"><span class="tok" lang="te" data-te="అవుతుంది" data-ro="avutundi">అవుతుంది</span><span class="gl">become-<span class="gram">3sg</span></span></span>
+              </div>
+              <p class="free">'Because light travels faster than sound.'</p>
+            </div>
+          </div>
+          <div class="gloss-foot">
+            <div class="legend" aria-hidden="true">
+              <span><i class="k-te"></i>Telugu</span>
+              <span><i class="k-en"></i>English</span>
+            </div>
+            <div class="script" role="group" aria-label="Show the Telugu words in">
+              <button type="button" id="script-te" aria-pressed="true">Telugu script</button>
+              <button type="button" id="script-ro" aria-pressed="false">Roman letters</button>
+            </div>
+          </div>
+          <figcaption>Two correct answers to the same question. The second mixes Telugu and English, the way a lot of bilingual speakers talk. I'm testing whether LLM judges score them the same.</figcaption>
+        </figure>
+      </div>
+
+      <div class="story-head" data-reveal>
+        <h2>How it fits together</h2>
+        <p>A library, an app and a research project. All three are about <mark class="hl">who gets to read and who gets understood</mark>.</p>
+      </div>
+
+      <div class="story" id="story">
+        <article class="chapter on" style="--c: var(--mint)">
+          <div class="visual card">
+            <div class="shelf" aria-hidden="true">
+              <i style="--h:70%;--w:1.5rem;--c:var(--mint);--n:0"></i>
+              <i style="--h:92%;--w:2rem;--c:var(--marker);--n:1"></i>
+              <i style="--h:80%;--w:1.3rem;--n:2" class="ink"></i>
+              <i style="--h:62%;--w:1.9rem;--c:var(--blush);--n:3"></i>
+              <i style="--h:88%;--w:1.5rem;--c:var(--sky);--n:4"></i>
+              <i style="--h:74%;--w:2.2rem;--c:var(--mint);--n:5"></i>
+              <i style="--h:96%;--w:1.4rem;--c:var(--blush);--n:6"></i>
+              <i style="--h:66%;--w:1.7rem;--c:var(--marker);--n:7"></i>
+              <i style="--h:84%;--w:1.6rem;--c:var(--sky);--n:8"></i>
+              <i style="--h:78%;--w:1.5rem;--n:9" class="ink lean"></i>
+            </div>
+            <p class="v-cap"><b>Readathon Revolution</b>The first library at a government school in Telangana, India. About 240 students use it.</p>
+          </div>
+          <div class="text" style="--r:1">
+            <span class="kicker"><b>1</b> Books</span>
+            <h3>A first library for my dad's old school</h3>
+            <p>I started Books Without Borders, a 501(c)(3) nonprofit, to get books to schools that don't have enough of them. Our first project was Readathon Revolution, a readathon and community book drive.</p>
+            <p>It paid for the first library at a government school in Telangana, India, and for the school's newspaper subscriptions.</p>
+            <p class="go"><a class="swipe" href="#projects">More about Books Without Borders</a></p>
+          </div>
+        </article>
+
+        <article class="chapter" style="--c: var(--blush)">
+          <div class="visual card">
+            <div class="paper">
+              <span class="tag">Sample letter</span>
+              <i class="ln" style="--w:55%"></i>
+              <i class="ln"></i>
+              <i class="ln" style="--w:88%"></i>
+              <p class="legal"><mark>Failure to remit the outstanding balance on or before 06/12 may result in discontinuation of service</mark> pursuant to the terms of the customer agreement.</p>
+              <i class="ln" style="--w:76%"></i>
+              <i class="ln" style="--w:40%"></i>
+            </div>
+            <div class="plain">
+              <span>In plain language</span>
+              <p>Pay your bill by June 12 or your water could be shut off.</p>
+            </div>
+          </div>
+          <div class="text" style="--r:2">
+            <span class="kicker"><b>2</b> Letters</span>
+            <h3>An app for the letters that are hardest to read</h3>
+            <p>Official letters were the hardest part of English for my parents, long after everyday conversation got easy. So I built Fine Print with a teammate for the 2026 Congressional App Challenge.</p>
+            <p>You photograph a letter and it explains it in plain language, in more than 30 languages. A second AI model checks the first, because AI can sound confident and still be wrong.</p>
+            <p class="go"><a class="swipe" href="#projects">How Fine Print works</a></p>
+          </div>
+        </article>
+
+        <article class="chapter" style="--c: var(--sky)">
+          <div class="visual card">
+            <p class="jq">Why do we see lightning before we hear thunder?</p>
+            <div class="jrow"><p>Because light travels faster than sound.</p><span class="score" aria-label="score unknown">?</span></div>
+            <div class="jrow"><p><mark lang="te">ఎందుకంటే</mark> light, sound <mark lang="te">కంటే</mark> fast <mark lang="te">గా</mark> travel <mark lang="te">అవుతుంది</mark>.</p><span class="score" aria-label="score unknown">?</span></div>
+            <p class="v-cap">Same answer both times. Does the judge give the same score?</p>
+          </div>
+          <div class="text" style="--r:3">
+            <span class="kicker"><b>3</b> Judges</span>
+            <h3>Research on the models that do the grading</h3>
+            <p>That checker came out of my research. LLM judges are models that grade other models' answers, and a lot of AI evaluation now depends on them.</p>
+            <p>On my Algoverse team, we test whether a judge's verdict holds up under pressure. On my own, I'm testing whether judges mark down answers that mix Telugu and English.</p>
+            <p class="go"><a class="swipe" href="#research">Read about my research</a></p>
+          </div>
+        </article>
+      </div>
+
+      <div class="lately">
+        <h2 data-reveal>Lately</h2>
+        <ol class="timeline" id="updates"></ol>
+      </div>
+
+      <div class="ask card" data-reveal>
+        <p class="big">I'm looking for a research mentor, a lab position or an internship for summer 2027.</p>
+        <div class="mail">
+          <a class="addr" data-email-link href="mailto:ssarapu09@gmail.com"><span data-email>ssarapu09@gmail.com</span></a>
+          <button class="button" type="button" data-copy>Copy email</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RESEARCH ================= -->
+    <section class="view" id="research">
+      <div class="page-head" style="--c: var(--sky)">
+        <h1><span>Research</span></h1>
+        <p>I work on how language models evaluate language. Right now that means LLM judges: how reliable they are, and whether they're fair to people who don't write in standard English.</p>
+        <ul class="chips" id="interests"></ul>
+      </div>
+      <div class="panels" id="research-list"></div>
+    </section>
+
+    <!-- ================= PROJECTS ================= -->
+    <section class="view" id="projects">
+      <div class="page-head" style="--c: var(--blush)">
+        <h1><span>Projects</span></h1>
+        <p>Things I've built outside of research. Both of them are about reading.</p>
+      </div>
+      <div class="panels" id="project-list"></div>
+    </section>
+
+    <!-- ================= LEADERSHIP ================= -->
+    <section class="view" id="leadership">
+      <div class="page-head" style="--c: var(--mint)">
+        <h1><span>Leadership</span></h1>
+        <p>What I do at Panther Creek High School, and how competitions have gone.</p>
+      </div>
+      <div class="rows-block">
+        <h2 class="rows-head" data-reveal>Awards</h2>
+        <ul class="rows" id="award-rows"></ul>
+      </div>
+      <div class="rows-block">
+        <h2 class="rows-head" data-reveal>Roles</h2>
+        <ul class="rows" id="role-rows"></ul>
+      </div>
+      <div class="rows-block">
+        <h2 class="rows-head" data-reveal>This year</h2>
+        <ul class="rows" id="season-rows"></ul>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section class="view" id="about">
+      <div class="page-head" style="--c: var(--marker)">
+        <h1><span>About</span></h1>
+      </div>
+      <div class="about">
+        <figure class="portrait">
+          <div class="frame"><img src="sahasra.jpg" width="720" height="836" alt="Sahasra Sarapu in a dark blazer, smiling in front of a blue Texas DECA backdrop"></div>
+          <figcaption>At Texas DECA's District 7 conference in Irving.</figcaption>
+        </figure>
+        <div class="prose">
+          <p class="first">I got hooked on coding the summer before fifth grade, at a science museum with a Maker Studio.</p>
+          <p>What I care about most now is where computer science meets linguistics: how models treat the languages and ways of speaking they've seen less of. That's the thread through my research, the app I built and the nonprofit I run.</p>
+          <p>Away from a screen, I like handwriting (the actual pen-on-paper kind) and I'm almost always listening to music.</p>
+          <h2>Classes this year</h2>
+          <ul class="chips" id="courses-now"></ul>
+          <h2>Already finished</h2>
+          <ul class="chips" id="courses-done"></ul>
+          <h2>What I work in</h2>
+          <ul class="chips" id="tools"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="view" id="contact">
+      <div class="page-head" style="--c: var(--marker)">
+        <h1><span>Contact</span></h1>
+      </div>
+      <div class="ask card" style="margin-top:0">
+        <p class="big">I'm looking for a research mentor, a lab position or an internship for summer 2027.</p>
+        <p class="fit">I'm in the Dallas-Fort Worth area and can work in person nearby or remotely. I'm most useful on evaluation pipelines and dataset work.</p>
+        <div class="mail">
+          <a class="addr" data-email-link href="mailto:ssarapu09@gmail.com"><span data-email>ssarapu09@gmail.com</span></a>
+          <button class="button" type="button" data-copy>Copy email</button>
+          <a class="button quiet" data-github href="https://github.com/ss8792student">GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Sahasra Sarapu</span>
+      <span><a class="swipe" data-email-link href="mailto:ssarapu09@gmail.com"><span data-email>ssarapu09@gmail.com</span></a></span>
+      <span>Updated <span data-updated>November 2026</span></span>
+    </footer>
+  </main>
+</div>
+
+<script src="content.js"></script>
+<script>
+(function () {
+  var S = window.SITE || {};
+  var root = document.documentElement;
+  root.classList.add('js');
+
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+  function into(id, nodes) {
+    var host = document.getElementById(id);
+    if (host) nodes.forEach(function (n, i) { n.style.setProperty('--d', (i * 0.07) + 's'); host.appendChild(n); });
+  }
+  function chips(id, list) { into(id, (list || []).map(function (t) { return el('li', null, t); })); }
+
+  /* ----- Fill the pages from content.js ----- */
+  document.querySelectorAll('[data-email]').forEach(function (n) { if (S.email) n.textContent = S.email; });
+  document.querySelectorAll('[data-email-link]').forEach(function (n) { if (S.email) n.href = 'mailto:' + S.email; });
+  document.querySelectorAll('[data-github]').forEach(function (n) { if (S.github) n.href = S.github; });
+  document.querySelectorAll('[data-updated]').forEach(function (n) { if (S.updated) n.textContent = S.updated; });
+
+  into('updates', (S.updates || []).map(function (u) {
+    var li = el('li'); li.setAttribute('data-reveal', '');
+    li.appendChild(el('time', null, u.date));
+    li.appendChild(el('p', null, u.text));
+    return li;
+  }));
+
+  function panel(it) {
+    var a = el('article', 'panel card'); a.setAttribute('data-reveal', '');
+    var head = el('header', 'panel-head');
+    head.appendChild(el('h2', null, it.title));
+    if (it.where) head.appendChild(el('p', 'meta', it.where));
+    if (it.status) head.appendChild(el('span', 'status', it.status));
+    if (it.links && it.links.length) {
+      var links = el('p', 'links');
+      it.links.forEach(function (l) { var x = el('a', 'swipe', l.label); x.href = l.href; links.appendChild(x); });
+      head.appendChild(links);
+    }
+    var body = el('div', 'panel-body');
+    (it.body || []).forEach(function (p) { body.appendChild(el('p', null, p)); });
+    if (it.sections && it.sections.length) {
+      var dl = el('dl', 'facts');
+      it.sections.forEach(function (s) {
+        var d = el('div');
+        d.appendChild(el('dt', null, s.label));
+        d.appendChild(el('dd', null, s.text));
+        dl.appendChild(d);
+      });
+      body.appendChild(dl);
+    }
+    if (it.steps && it.steps.length) {
+      body.appendChild(el('h3', null, it.stepsTitle || 'How it works'));
+      var ol = el('ol', 'steps');
+      it.steps.forEach(function (s) { ol.appendChild(el('li', null, '<span>' + s + '</span>')); });
+      body.appendChild(ol);
+    }
+    if (it.tags && it.tags.length) {
+      var ul = el('ul', 'chips');
+      it.tags.forEach(function (t) { ul.appendChild(el('li', null, t)); });
+      body.appendChild(ul);
+    }
+    if (it.note) body.appendChild(el('p', 'note', it.note));
+    a.appendChild(head); a.appendChild(body);
+    return a;
+  }
+  function row(r) {
+    var li = el('li'); li.setAttribute('data-reveal', '');
+    li.appendChild(el('span', 'what', r.org));
+    li.appendChild(el('span', 'detail', (r.lead ? '<strong>' + r.lead + '</strong> ' : '') + (r.detail || '')));
+    return li;
+  }
+
+  var R = S.research || {}, P = S.projects || {}, A = S.about || {};
+  chips('interests', R.interests);
+  into('research-list', (R.items || []).map(panel));
+  into('project-list', (P.items || []).map(panel));
+  into('award-rows', (S.awards || []).map(row));
+  into('role-rows', (S.roles || []).map(row));
+  into('season-rows', (S.season || []).map(row));
+  chips('courses-now', A.coursesNow);
+  chips('courses-done', A.coursesDone);
+  chips('tools', A.tools);
+
+  /* ----- Pages: one view per #name ----- */
+  var names = ['home', 'research', 'projects', 'leadership', 'about', 'contact'];
+  var views = document.querySelectorAll('.view');
+  var navLinks = document.querySelectorAll('.bar nav a');
+  function route(jump) {
+    var name = (location.hash || '').replace('#', '');
+    if (names.indexOf(name) < 0) name = 'home';
+    views.forEach(function (v) { v.classList.toggle('active', v.id === name); });
+    navLinks.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + name) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    if (jump) window.scrollTo(0, 0);
+    onScroll();
+  }
+  window.addEventListener('hashchange', function () { route(true); });
+
+  /* ----- Scroll: washes, progress bar, timeline ink ----- */
+  var ticking = false;
+  var timeline = document.getElementById('updates');
+  function onScroll() {
+    ticking = false;
+    var y = window.scrollY || 0;
+    var max = Math.max(1, root.scrollHeight - window.innerHeight);
+    root.style.setProperty('--sy', y.toFixed(1));
+    root.style.setProperty('--read', Math.min(1, y / max).toFixed(4));
+    if (timeline && timeline.offsetParent) {
+      var r = timeline.getBoundingClientRect();
+      var mark = window.innerHeight * 0.72;
+      var p = Math.max(0, Math.min(1, (mark - r.top) / Math.max(1, r.height)));
+      if (max < 40) p = 1;
+      timeline.style.setProperty('--p', p.toFixed(3));
+      timeline.querySelectorAll('li').forEach(function (li) {
+        li.classList.toggle('passed', max < 40 || li.getBoundingClientRect().top < mark);
+      });
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  /* ----- Reveal on scroll, highlighter marks, story chapters ----- */
+  var revealables = document.querySelectorAll('[data-reveal], mark.hl');
+  if ('IntersectionObserver' in window) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); seen.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    revealables.forEach(function (n) { seen.observe(n); });
+
+    var chapters = document.querySelectorAll('.chapter');
+    var stage = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        chapters.forEach(function (c) { c.classList.toggle('on', c === e.target.parentNode); });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('.chapter .text').forEach(function (t) { stage.observe(t); });
+  } else {
+    revealables.forEach(function (n) { n.classList.add('in'); });
+  }
+
+  /* ----- Telugu script / Roman letters ----- */
+  var te = document.getElementById('script-te'), ro = document.getElementById('script-ro');
+  var toks = document.querySelectorAll('#igt .tok[data-te]');
+  function show(roman) {
+    toks.forEach(function (t) {
+      t.textContent = roman ? t.dataset.ro : t.dataset.te;
+      if (roman) t.removeAttribute('lang'); else t.setAttribute('lang', 'te');
+    });
+    te.setAttribute('aria-pressed', String(!roman));
+    ro.setAttribute('aria-pressed', String(roman));
+  }
+  if (te && ro) {
+    te.addEventListener('click', function () { show(false); });
+    ro.addEventListener('click', function () { show(true); });
+  }
+
+  /* ----- Copy email ----- */
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var done = function (msg) { b.textContent = msg; setTimeout(function () { b.textContent = 'Copy email'; }, 1800); };
+      try {
+        navigator.clipboard.writeText(S.email || '').then(function () { done('Copied'); }, function () { done('Select the address to copy'); });
+      } catch (err) { done('Select the address to copy'); }
+    });
+  });
+
+  route(false);
+})();
+</script>
+</body>
+</html>
